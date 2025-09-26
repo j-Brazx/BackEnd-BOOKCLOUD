@@ -6,7 +6,7 @@ const livrosController = require("../controllers/livrosController.js");
 
 
 router.post(
-  "/cadastrolivros",
+  "/cadastrarlivros",
   upload.single("imagem"),
   livrosController.registrarLivro
 );

@@ -8,8 +8,6 @@ const criarUsuario = async (req, res) => {
       nome,
       email,
       senhaHash,
-      tipo_usuario,
-      status
     );
     console.log(usuario);
     res.status(201).json(usuario);

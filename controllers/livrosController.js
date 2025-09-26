@@ -2,10 +2,10 @@ const livrosModel = require("../models/livrosModel");
 
 const registrarLivro = async (req, res) => {
   try {
-    const { nome, sinopse, autor, status, avaliacao, id_categoria } = req.body;
+    const { nome, sinopse, autor, status, avaliacao} = req.body;
     const imagem = req.file ? req.file.buffer : null;
 
-    if (!nome || !sinopse || !status || !imagem) {
+    if (!nome || !sinopse || !imagem) {
       return res
         .status(400)
         .json({ erro: "Preencha todos os campos obrigatórios!" });
@@ -15,10 +15,7 @@ const registrarLivro = async (req, res) => {
       nome,
       sinopse,
       autor || null,
-      status,
-      avaliacao || null,
       imagem,
-      id_categoria || null
     );
 
     res.status(201).json({

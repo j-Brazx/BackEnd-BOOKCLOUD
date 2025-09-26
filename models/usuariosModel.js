@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const criarUsuario = async (nome, email, senhaHash) => {
   const query =
-    "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING id, nome, email";
+    "INSERT INTO usuarios (nome, email, senha, tipo_usuario, status) VALUES ($1, $2, $3,'visitante','Ativo') RETURNING id, nome, email";
   const valores = [nome, email, senhaHash];
   console.log(query);
   console.log(valores);
