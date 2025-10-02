@@ -2,20 +2,22 @@ const livrosModel = require("../models/livrosModel");
 
 const registrarLivro = async (req, res) => {
   try {
-    const { nome, sinopse, autor, status, avaliacao} = req.body;
-    const imagem = req.file ? req.file.buffer : null;
+    const { nome, sinopse, autor, id_categoria } = req.body;
+     const imagem = req.file ? req.file.buffer : null;
+    //const imagem = req.file ? req.file.buffer : "teste";
 
-    if (!nome || !sinopse || !imagem) {
+    if (!nome || !sinopse || !id_categoria || !imagem) {
       return res
         .status(400)
         .json({ erro: "Preencha todos os campos obrigatórios!" });
     }
 
-    const novoLivro = await livrosModel.criarLivro(
+    const novoLivro = await livrosModel.criarLivro( 
       nome,
       sinopse,
       autor || null,
       imagem,
+      id_categoria
     );
 
     res.status(201).json({
@@ -53,8 +55,25 @@ const selecionarLivro = async (req, res) => {
   }
 };
 
+const selecionarPorCategoria = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const livros = await livrosModel.LivroPorCategoria(id);
+
+    if (livros.length === 0) {
+      return res.status(404).json({ mensagem: "Nenhum livro encontrado nesta categoria." });
+    }
+
+    res.json(livros);
+  } catch (error) {
+    console.error("Erro ao buscar livros por categoria:", error);
+    res.status(500).json({ erro: "Erro no servidor." });
+  }
+};
+
 module.exports = {
   registrarLivro,
   apagarLivro,
-  selecionarLivro
+  selecionarLivro,
+  selecionarPorCategoria
 };

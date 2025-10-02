@@ -6,7 +6,7 @@ const livrosController = require("../controllers/livrosController.js");
 
 
 router.post(
-  "/cadastrarlivros",
+  "/cadastrarLivros",
   upload.single("imagem"),
   livrosController.registrarLivro
 );
@@ -21,6 +21,12 @@ router.get(
   "/acervolivros",
   upload.single("imagem"),
   livrosController.selecionarLivro
+);
+
+router.get(
+  "/livrosporcat/:id",
+  upload.single("imagem"),
+  livrosController.selecionarPorCategoria
 );
 
 
