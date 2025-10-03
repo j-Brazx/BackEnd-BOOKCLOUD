@@ -3,9 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const conexao = require("./conexao");
 const usuariosRoutes = require("./routes/usuariosRoutes");
-const livrosRoutes = require("./routes/livrosRoutes")
+const livrosRoutes = require("./routes/livrosRoutes");
 const categoriasRoutes = require("./routes/categoriasRoutes");
-
+const emprestimosRoutes = require("./routes/emprestimosRoutes");
 
 const app = express();
 
@@ -15,8 +15,9 @@ app.use(express.json());
 
 //rotas
 app.use("/usuarios", usuariosRoutes);
-app.use("/livros",livrosRoutes)
-app.use("/categorias", categoriasRoutes)
+app.use("/livros", livrosRoutes);
+app.use("/categorias", categoriasRoutes);
+app.use("/emprestimos", emprestimosRoutes);
 
 //Rota para teste de conexao
 app.get("/", (req, res) => {
