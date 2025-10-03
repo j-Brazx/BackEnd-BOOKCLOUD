@@ -8,6 +8,13 @@ const criarLivro = async (nome, sinopse, autor, imagem, id_categoria) => {
   `;
 
   const valores = [nome, sinopse, autor, imagem, id_categoria];
+<<<<<<< HEAD
+=======
+
+  console.log(valores);
+  console.log(query);
+
+>>>>>>> 90265ed999946102070df355725e7af0bc816d0c
   const { rows } = await conexao.query(query, valores);
 
   return rows[0];
@@ -29,6 +36,7 @@ const apagarLivro = async (id) => {
   return rows[0];
 };
 
+<<<<<<< HEAD
 const listarPorCategoria = async (id_categoria) => {
   const query = "SELECT * FROM livros WHERE id_categoria = $1";
   const { rows } = await conexao.query(query, [id_categoria]);
@@ -47,13 +55,27 @@ const atualizarStatus = async (id, status) => {
     status,
     id,
   ]);
+=======
+const LivroPorCategoria = async (id_categoria) => {
+  const query = `
+    SELECT id, nome, sinopse, autor, status, avaliacao, imagem, id_categoria
+    FROM livros
+    WHERE id_categoria = $1
+  `;
+  const { rows } = await conexao.query(query, [id_categoria]);
+  return rows; // retorna lista de livros
+>>>>>>> 90265ed999946102070df355725e7af0bc816d0c
 };
 
 module.exports = {
   criarLivro,
   apagarLivro,
   selecionarLivro,
+<<<<<<< HEAD
   buscarPorId,
   atualizarStatus,
   listarPorCategoria,
+=======
+  LivroPorCategoria
+>>>>>>> 90265ed999946102070df355725e7af0bc816d0c
 };
