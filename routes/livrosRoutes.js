@@ -14,15 +14,22 @@ router.delete("/deletarlivros/:id", livrosController.apagarLivro);
 
 router.get("/acervolivros", livrosController.selecionarLivro);
 
-<<<<<<< HEAD
+
 router.get("/categorias/:id/livros", livrosController.listarPorCategoria);
-=======
+
 router.get(
   "/livrosporcat/:id",
   upload.single("imagem"),
   livrosController.selecionarPorCategoria
 );
 
->>>>>>> 90265ed999946102070df355725e7af0bc816d0c
+
+router.get(
+  "/livroSinopse/:id",
+  upload.single("imagem"),
+  livrosController.Sinopse
+);
+
+
 
 module.exports = router;
