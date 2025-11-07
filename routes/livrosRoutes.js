@@ -10,26 +10,24 @@ router.post(
   livrosController.registrarLivro
 );
 
+router.put(
+  "/atualizarlivros/:id",
+  upload.single("imagem"),
+  livrosController.atualizarLivro
+);
+
 router.delete("/deletarlivros/:id", livrosController.apagarLivro);
 
-router.get("/acervolivros", livrosController.selecionarLivro);
-
-
-router.get("/categorias/:id/livros", livrosController.listarPorCategoria);
-
+router.get("/acervolivros", upload.single("imagem"), livrosController.selecionarLivro);
 router.get(
   "/livrosporcat/:id",
   upload.single("imagem"),
   livrosController.selecionarPorCategoria
 );
-
-
 router.get(
   "/livroSinopse/:id",
   upload.single("imagem"),
   livrosController.Sinopse
 );
-
-
 
 module.exports = router;

@@ -3,10 +3,12 @@ const livrosModel = require("../models/livrosModel");
 const registrarLivro = async (req, res) => {
   try {
     const { nome, sinopse, autor, id_categoria } = req.body;
-    // Mantendo a lógica de arquivo do HEAD, que parece salvar o nome do arquivo.
     const imagem = req.file ? req.file.filename : null; 
-    // Você pode precisar ajustar 'req.file.filename' ou 'req.file.buffer' dependendo de como você faz o upload.
-
+    console.log("1");
+    console.log(autor);
+console.log(imagem);
+console.log(req.file);
+console.log(req.file.filename);
     if (!nome || !sinopse || !id_categoria || !imagem) {
       return res
         .status(400)
@@ -20,7 +22,7 @@ const registrarLivro = async (req, res) => {
       imagem,
       id_categoria
     );
-
+console.log("2 ");
     res.status(201).json({
       mensagem: "Livro cadastrado com sucesso!",
       livro: novoLivro,
@@ -29,6 +31,36 @@ const registrarLivro = async (req, res) => {
     console.error("Erro ao registrar livro:", erro);
     res.status(500).json({ erro: "Erro no servidor." });
   }
+};
+
+
+const atualizarLivro = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, sinopse, autor, avaliacao } = req.body;
+    const imagem = req.file ? req.file.filename : null;
+
+    const livroAtualizado = await livrosModel.atualizarLivro(
+      id,
+      nome,
+      sinopse,
+      autor,
+      avaliacao,
+      imagem
+    );
+
+    if (!livroAtualizado) {
+      return res.status(404).json({ erro: "Livro não encontrado." });
+    }
+
+    res.json({
+      mensagem: "Livro atualizado com sucesso!",
+      livro: livroAtualizado,
+    });
+  } catch (erro) {
+  console.error("Erro ao atualizar livro:", erro.message, erro.stack);
+  res.status(500).json({ erro: "Erro ao atualizar livro.", detalhe: erro.message });
+}
 };
 
 const apagarLivro = async (req, res) => {
@@ -58,11 +90,11 @@ const selecionarLivro = async (req, res) => {
   }
 };
 
-// Funções de listagem por categoria combinadas/renomeadas
+
 const selecionarPorCategoria = async (req, res) => {
   try {
     const { id } = req.params; 
-    // Usando a função do Model com o nome mais completo
+    
     const livros = await livrosModel.LivroPorCategoria(id); 
 
     if (livros.length === 0) {
@@ -97,5 +129,6 @@ module.exports = {
   apagarLivro,
   selecionarLivro,
   selecionarPorCategoria, 
-  Sinopse 
+  Sinopse,
+  atualizarLivro 
 };

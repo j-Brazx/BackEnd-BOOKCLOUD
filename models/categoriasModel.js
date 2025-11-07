@@ -16,10 +16,14 @@ const excluirCategoria = async (id) => {
   await conexao.query(query, [id]);
 };
 
-
+const selecionarCategoria = async () => {
+  const query = "SELECT * FROM categoria ORDER BY id ASC";
+  const { rows } = await conexao.query(query);
+  return rows;
+};
 
 module.exports = {
   adicionarCategoria,
   excluirCategoria,
-
+  selecionarCategoria,
 };

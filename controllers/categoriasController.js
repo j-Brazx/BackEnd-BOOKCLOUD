@@ -32,19 +32,19 @@ const excluirCategoria = async (req, res) => {
 
 const selecionarCategorias = async (req, res) => {
   try {
-    const categoria = await categoriaModel.selecionarCategorias();
-
-    res.status(201).json(categoria);
-  } catch (error) {
-    res.status(500).json({
-      erro: "Erro ao selecionar categorias",
-      detalhe: error.message,
-    });
-  }
-};
+      const todas = await categoriaModel.selecionarCategoria();
+  
+      res.status(201).json(todas);
+    } catch (error) {
+      res.status(500).json({
+        erro: "Erro ao buscar categorias",
+        detalhe: error.message,
+      });
+    }
+  };
 
 module.exports = {
   adicionarCategoria,
   excluirCategoria,
-  selecionarCategorias
+  selecionarCategorias,
 };

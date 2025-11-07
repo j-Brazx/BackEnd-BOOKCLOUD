@@ -1,11 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const conexao = require("./conexao");
+// const conexao = require("../conexao");
 const usuariosRoutes = require("./routes/usuariosRoutes");
 const livrosRoutes = require("./routes/livrosRoutes");
 const categoriasRoutes = require("./routes/categoriasRoutes");
 const emprestimosRoutes = require("./routes/emprestimosRoutes");
+const comentarioRoutes = require("./routes/comentarioRoutes");
+const clientesRoutes = require("./routes/clientesRoutes");
+
 
 const app = express();
 
@@ -18,6 +21,8 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/livros", livrosRoutes);
 app.use("/categorias", categoriasRoutes);
 app.use("/emprestimos", emprestimosRoutes);
+app.use("/comentario", comentarioRoutes);
+app.use("/clientes", clientesRoutes);
 
 //Rota para teste de conexao
 app.get("/", (req, res) => {
