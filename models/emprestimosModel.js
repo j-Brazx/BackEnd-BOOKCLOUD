@@ -6,26 +6,44 @@ const criarEmprestimo = async (id_usuario, id_livro) => {
   if (!livro) throw new Error("Livro não encontrado");
   if (livro.status !== "livre") throw new Error("Livro já está emprestado");
 
-  // Calcula a data de devolução 15 dias após hoje
+
   const dataEmprestimo = new Date();
   const dataDevolucao = new Date();
-  dataDevolucao.setDate(dataEmprestimo.getDate() + 15); // adiciona 15 dias
+  dataDevolucao.setDate(dataEmprestimo.getDate() + 15);
 
-  const query = `
+
+  const queryEmprestimo = `
     INSERT INTO emprestimo (data_emprestimo, data_devolucao, id_usuario, id_livro)
     VALUES ($1, $2, $3, $4)
     RETURNING *;
   `;
-  const { rows } = await conexao.query(query, [
+
+  const { rows } = await conexao.query(queryEmprestimo, [
     dataEmprestimo,
     dataDevolucao,
     id_usuario,
     id_livro,
   ]);
 
+  const emprestimo = rows[0];
+
+
   await livrosModel.atualizarStatus(id_livro, "ocupado");
 
-  return rows[0];
+ 
+  const insertCliente = `
+    INSERT INTO clientes (id_cliente, id_nome_usuario, id_livro, id_reserva_atual)
+    VALUES ($1, $2, $3, $4);
+  `;
+
+  await conexao.query(insertCliente, [
+    id_usuario,        
+    id_usuario,        
+    id_livro,        
+    emprestimo.id      
+  ]);
+
+  return emprestimo;
 };
 
 const devolverEmprestimo = async (id_emprestimo) => {

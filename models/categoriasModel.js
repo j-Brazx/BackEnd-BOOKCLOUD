@@ -10,6 +10,19 @@ const adicionarCategoria = async (nome_categoria, descricao) => {
   const { rows } = await conexao.query(query, valores);
   return rows[0];
 };
+const generoMaiorAcervo = async () => {
+  const query = `
+    SELECT c.nome_categoria, COUNT(l.id) AS total_livros
+    FROM categoria c
+    LEFT JOIN livros l ON l.id_categoria = c.id
+    GROUP BY c.nome_categoria
+    ORDER BY total_livros DESC
+    LIMIT 1
+  `;
+  const { rows } = await conexao.query(query);
+  return rows[0];
+};
+
 
 const excluirCategoria = async (id) => {
   const query = "DELETE FROM categoria WHERE id = $1";
@@ -26,4 +39,5 @@ module.exports = {
   adicionarCategoria,
   excluirCategoria,
   selecionarCategoria,
+  generoMaiorAcervo
 };

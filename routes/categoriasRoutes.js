@@ -7,5 +7,5 @@ const categoriaController = require("../controllers/categoriasController");
 router.post("/adicionar", categoriaController.adicionarCategoria);
 router.delete("/excluir/:id", categoriaController.excluirCategoria);
 router.get("/selecionar", categoriaController.selecionarCategorias);
-
+router.get("/maiorAcervo", categoriaController.maiorAcervo);
 module.exports = router;

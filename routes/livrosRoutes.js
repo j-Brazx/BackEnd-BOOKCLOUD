@@ -9,6 +9,8 @@ router.post(
   upload.single("imagem"),
   livrosController.registrarLivro
 );
+router.get("/emprestados", livrosController.listarLivrosEmprestados);
+router.get("/disponiveis", livrosController.listarLivrosDisponiveis);
 
 router.put(
   "/atualizarlivros/:id",
@@ -18,16 +20,18 @@ router.put(
 
 router.delete("/deletarlivros/:id", livrosController.apagarLivro);
 
-router.get("/acervolivros", upload.single("imagem"), livrosController.selecionarLivro);
+router.get(
+  "/acervolivros",
+  livrosController.selecionarLivro
+);
 router.get(
   "/livrosporcat/:id",
-  upload.single("imagem"),
   livrosController.selecionarPorCategoria
 );
 router.get(
   "/livroSinopse/:id",
-  upload.single("imagem"),
   livrosController.Sinopse
 );
+router.get("/livrosPorId/:id", livrosController.buscarPorId);
 
 module.exports = router;

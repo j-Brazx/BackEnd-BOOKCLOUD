@@ -3,26 +3,25 @@ const livrosModel = require("../models/livrosModel");
 const registrarLivro = async (req, res) => {
   try {
     const { nome, sinopse, autor, id_categoria } = req.body;
-    const imagem = req.file ? req.file.filename : null; 
+    const imagem = req.file ? req.file.buffer : null;
     console.log("1");
     console.log(autor);
-console.log(imagem);
-console.log(req.file);
-console.log(req.file.filename);
+    console.log(imagem);
+    console.log(req.file);
     if (!nome || !sinopse || !id_categoria || !imagem) {
       return res
         .status(400)
         .json({ erro: "Preencha todos os campos obrigatórios!" });
     }
 
-    const novoLivro = await livrosModel.criarLivro( 
+    const novoLivro = await livrosModel.criarLivro(
       nome,
       sinopse,
       autor || null,
       imagem,
       id_categoria
     );
-console.log("2 ");
+    console.log("2 ");
     res.status(201).json({
       mensagem: "Livro cadastrado com sucesso!",
       livro: novoLivro,
@@ -32,7 +31,6 @@ console.log("2 ");
     res.status(500).json({ erro: "Erro no servidor." });
   }
 };
-
 
 const atualizarLivro = async (req, res) => {
   try {
@@ -58,9 +56,11 @@ const atualizarLivro = async (req, res) => {
       livro: livroAtualizado,
     });
   } catch (erro) {
-  console.error("Erro ao atualizar livro:", erro.message, erro.stack);
-  res.status(500).json({ erro: "Erro ao atualizar livro.", detalhe: erro.message });
-}
+    console.error("Erro ao atualizar livro:", erro.message, erro.stack);
+    res
+      .status(500)
+      .json({ erro: "Erro ao atualizar livro.", detalhe: erro.message });
+  }
 };
 
 const apagarLivro = async (req, res) => {
@@ -90,15 +90,40 @@ const selecionarLivro = async (req, res) => {
   }
 };
 
+const listarLivrosEmprestados = async (req, res) => {
+  try {
+    const dados = await livrosModel.selecionarLivrosEmprestados();
+    res.status(200).json(dados);
+  } catch (error) {
+    res.status(500).json({
+      erro: "Erro ao buscar livros emprestados",
+      detalhe: error.message,
+    });
+  }
+};
+
+const listarLivrosDisponiveis = async (req, res) => {
+  try {
+    const dados = await livrosModel.selecionarLivrosDisponiveis();
+    res.status(200).json(dados);
+  } catch (error) {
+    res.status(500).json({
+      erro: "Erro ao buscar livros disponíveis",
+      detalhe: error.message,
+    });
+  }
+};
 
 const selecionarPorCategoria = async (req, res) => {
   try {
-    const { id } = req.params; 
-    
-    const livros = await livrosModel.LivroPorCategoria(id); 
+    const { id } = req.params;
+
+    const livros = await livrosModel.LivroPorCategoria(id);
 
     if (livros.length === 0) {
-      return res.status(404).json({ mensagem: "Nenhum livro encontrado nesta categoria." });
+      return res
+        .status(404)
+        .json({ mensagem: "Nenhum livro encontrado nesta categoria." });
     }
 
     res.json(livros);
@@ -110,7 +135,7 @@ const selecionarPorCategoria = async (req, res) => {
 
 const Sinopse = async (req, res) => {
   try {
-    const { id } = req.params; 
+    const { id } = req.params;
     const livros = await livrosModel.SinopseLivro(id);
 
     if (livros.length === 0) {
@@ -124,11 +149,33 @@ const Sinopse = async (req, res) => {
   }
 };
 
+const buscarPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const livro = await livrosModel.buscarPorId(id);
+
+    if (!livro) {
+      return res.status(404).json({ erro: "Livro não encontrado" });
+    }
+
+    return res.status(200).json(livro);
+  } catch (erro) {
+    console.error("Erro ao buscar livro:", erro);
+    return res.status(500).json({
+      erro: "Erro ao buscar o livro",
+    });
+  }
+};
+
 module.exports = {
   registrarLivro,
   apagarLivro,
   selecionarLivro,
-  selecionarPorCategoria, 
+  selecionarPorCategoria,
   Sinopse,
-  atualizarLivro 
+  atualizarLivro,
+  buscarPorId,
+  listarLivrosDisponiveis,
+  listarLivrosEmprestados
 };

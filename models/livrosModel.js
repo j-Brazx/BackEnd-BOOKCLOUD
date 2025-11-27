@@ -11,6 +11,17 @@ const criarLivro = async (nome, sinopse, autor, imagem, id_categoria) => {
   const { rows } = await conexao.query(query, valores);
   return rows[0];
 };
+const selecionarLivrosEmprestados = async () => {
+  const query = "SELECT * FROM livros WHERE status = 'ocupado'";
+  const { rows } = await conexao.query(query);
+  return rows;
+};
+
+const selecionarLivrosDisponiveis = async () => {
+  const query = "SELECT * FROM livros WHERE status = 'livre'";
+  const { rows } = await conexao.query(query);
+  return rows;
+}
 
 // ✅ Atualizar livro
 const atualizarLivro = async (id, nome, sinopse, autor, avaliacao, imagem) => {
@@ -100,4 +111,6 @@ module.exports = {
   listarPorCategoria,
   LivroPorCategoria,
   SinopseLivro,
+  selecionarLivrosDisponiveis,
+  selecionarLivrosEmprestados
 };

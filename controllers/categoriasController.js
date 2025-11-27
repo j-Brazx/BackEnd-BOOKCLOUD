@@ -16,6 +16,19 @@ const adicionarCategoria = async (req, res) => {
   }
 };
 
+const maiorAcervo = async (req, res) => {
+  try {
+    const dados = await categoriaModel.generoMaiorAcervo();
+    res.status(200).json(dados);
+  } catch (error) {
+    res.status(500).json({
+      erro: "Erro ao buscar gênero com maior acervo",
+      detalhe: error.message
+    });
+  }
+};
+
+
 
 const excluirCategoria = async (req, res) => {
   const { id } = req.params;
@@ -47,4 +60,5 @@ module.exports = {
   adicionarCategoria,
   excluirCategoria,
   selecionarCategorias,
+  maiorAcervo
 };
