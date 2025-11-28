@@ -35,22 +35,28 @@ const registrarLivro = async (req, res) => {
 const atualizarLivro = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nome, sinopse, autor, avaliacao } = req.body;
-    const imagem = req.file ? req.file.filename : null;
+    const { nome, sinopse, autor } = req.body;
+
+    let imagem = undefined; 
+    // isso faz com que o model saiba se chegou imagem ou não
+
+    if (req.file) {
+      imagem = req.file.filename; // Apenas se veio imagem nova
+    }
 
     const livroAtualizado = await livrosModel.atualizarLivro(
       id,
       nome,
       sinopse,
       autor,
-      avaliacao,
-      imagem
+      imagem // agora só passa se tiver imagem nova
     );
 
     if (!livroAtualizado) {
       return res.status(404).json({ erro: "Livro não encontrado." });
     }
-
+console.log("FILE =>", req.file);
+console.log("BODY =>", req.body);
     res.json({
       mensagem: "Livro atualizado com sucesso!",
       livro: livroAtualizado,
@@ -62,6 +68,7 @@ const atualizarLivro = async (req, res) => {
       .json({ erro: "Erro ao atualizar livro.", detalhe: erro.message });
   }
 };
+
 
 const apagarLivro = async (req, res) => {
   const { id } = req.params;

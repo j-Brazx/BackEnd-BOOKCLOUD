@@ -7,5 +7,7 @@ router.post("/solicitar", emprestimosController.solicitarEmprestimo);
 
 // Devolver livro
 router.post("/devolver/:id", emprestimosController.devolverLivro);
+router.get("/exibir/:id", emprestimosController.exibirEmprestimo);
+router.get("/listar", emprestimosController.listarEmprestimos);
 
 module.exports = router;

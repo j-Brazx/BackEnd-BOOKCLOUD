@@ -1,6 +1,5 @@
 const conexao = require("../conexao");
 
-// ✅ Criar livro
 const criarLivro = async (nome, sinopse, autor, imagem, id_categoria) => {
   const query = `
     INSERT INTO livros (nome, sinopse, autor, status, avaliacao, imagem, id_categoria)
@@ -23,32 +22,58 @@ const selecionarLivrosDisponiveis = async () => {
   return rows;
 }
 
-// ✅ Atualizar livro
-const atualizarLivro = async (id, nome, sinopse, autor, avaliacao, imagem) => {
+
+atualizarLivro = async (id, nome, sinopse, autor, imagem) => {
+  const campos = [];
+  const valores = [];
+  let index = 1;
+
+  if (nome) {
+    campos.push(`nome = $${index}`);
+    valores.push(nome);
+    index++;
+  }
+
+  if (sinopse) {
+    campos.push(`sinopse = $${index}`);
+    valores.push(sinopse);
+    index++;
+  }
+
+  if (autor) {
+    campos.push(`autor = $${index}`);
+    valores.push(autor);
+    index++;
+  }
+
+  // Atualiza imagem **somente se veio nova**
+  if (imagem !== undefined) {
+    campos.push(`imagem = $${index}`);
+    valores.push(imagem);
+    index++;
+  }
+
   const query = `
     UPDATE livros
-    SET
-      nome = COALESCE($1, nome),
-      sinopse = COALESCE($2, sinopse),
-      autor = COALESCE($3, autor),
-      avaliacao = COALESCE($4, avaliacao),
-      imagem = COALESCE($5, imagem)
-    WHERE id = $6
-    RETURNING id, nome, sinopse, autor, avaliacao, imagem, status;
+    SET ${campos.join(", ")}
+    WHERE id = $${index}
+    RETURNING *;
   `;
-  const valores = [nome, sinopse, autor, avaliacao, imagem, id];
+
+  valores.push(id);
+
   const { rows } = await conexao.query(query, valores);
-  return rows[0]; // retorna o livro atualizado
+  return rows[0];
 };
 
-// ✅ Selecionar todos os livros
+
 const selecionarLivro = async () => {
   const query = "SELECT * FROM livros ORDER BY id ASC";
   const { rows } = await conexao.query(query);
   return rows;
 };
 
-// ✅ Apagar livro
+
 const apagarLivro = async (id) => {
   const query = `
     DELETE FROM livros
@@ -59,26 +84,26 @@ const apagarLivro = async (id) => {
   return rows[0];
 };
 
-// ✅ Buscar por ID
+
 const buscarPorId = async (id) => {
   const query = "SELECT * FROM livros WHERE id = $1";
   const { rows } = await conexao.query(query, [id]);
   return rows[0];
 };
 
-// ✅ Atualizar status do livro
+
 const atualizarStatus = async (id, status) => {
   await conexao.query("UPDATE livros SET status = $1 WHERE id = $2", [status, id]);
 };
 
-// ✅ Listar por categoria
+
 const listarPorCategoria = async (id_categoria) => {
   const query = "SELECT * FROM livros WHERE id_categoria = $1";
   const { rows } = await conexao.query(query, [id_categoria]);
   return rows;
 };
 
-// ✅ Livros por categoria (com mais campos)
+
 const LivroPorCategoria = async (id_categoria) => {
   const query = `
     SELECT id, nome, sinopse, autor, status, avaliacao, imagem, id_categoria
@@ -89,7 +114,7 @@ const LivroPorCategoria = async (id_categoria) => {
   return rows;
 };
 
-// ✅ Buscar sinopse de um livro específico
+
 const SinopseLivro = async (id) => {
   const query = `
     SELECT id, nome, sinopse, autor, status, avaliacao, imagem, id_categoria
@@ -100,7 +125,6 @@ const SinopseLivro = async (id) => {
   return rows;
 };
 
-// ✅ Exporta tudo corretamente
 module.exports = {
   criarLivro,
   atualizarLivro,

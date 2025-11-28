@@ -34,7 +34,43 @@ const devolverLivro = async (req, res) => {
   }
 };
 
+const exibirEmprestimo = async (req, res) => {
+  try {
+    const { id_livro } = req.params; // pega o id do livro
+
+    const emprestimo = await emprestimosModel.dataDevolucao(id_livro);
+
+    if (!emprestimo) {
+      return res.status(404).json({ error: "Nenhum empréstimo encontrado para este livro." });
+    }
+
+    return res.status(200).json(emprestimo);
+
+  } catch (error) {
+    console.error("Erro ao buscar empréstimo pelo livro:", error);
+    return res.status(500).json({ error: "Erro interno no servidor" });
+  }
+};
+
+const listarEmprestimos = async (req, res) => {
+  try {
+    const emprestimos = await emprestimosModel.ListarEmprestimo();
+
+    if (emprestimos.length === 0) {
+      return res.status(404).json({ mensagem: "Nenhum empréstimo encontrado." });
+    }
+
+    res.json(emprestimos);
+  } catch (error) {
+    console.error("Erro ao listar empréstimos:", error);
+    res.status(500).json({ erro: "Erro no servidor" });
+  }
+};
+
+   
 module.exports = {
   solicitarEmprestimo,
   devolverLivro,
+  exibirEmprestimo,
+  listarEmprestimos,
 };
