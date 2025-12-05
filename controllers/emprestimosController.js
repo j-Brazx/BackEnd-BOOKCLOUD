@@ -14,9 +14,14 @@ const solicitarEmprestimo = async (req, res) => {
       mensagem: "Empréstimo realizado com sucesso",
       emprestimo,
     });
-  } catch (error) {
-    res.status(400).json({ erro: error.message });
-  }
+  } catch (err) {
+  if (err.response) {
+    console.error("Erro do servidor:", err.response.data);
+    alert(`Erro: ${err.response.data.message || "400 Bad Request"}`);
+  } else {
+    console.error("Erro:", err.message);
+    alert("Erro desconhecido ao tentar reservar livro.");
+  }}
 };
 
 const devolverLivro = async (req, res) => {
@@ -67,10 +72,29 @@ const listarEmprestimos = async (req, res) => {
   }
 };
 
+
+
+
+const listarAtivos = async (req, res) => {
+    try {
+      const dados = await emprestimosModel.listarEmprestimosAtivos();
+      return res.status(200).json(dados);
+    } catch (error) {
+      console.error("Erro ao listar empréstimos:", error);
+      return res.status(500).json({ erro: "Erro ao buscar empréstimos ativos" });
+    }
+  };
+
+
+
+
+
+
    
 module.exports = {
   solicitarEmprestimo,
   devolverLivro,
   exibirEmprestimo,
   listarEmprestimos,
-};
+  listarAtivos
+}

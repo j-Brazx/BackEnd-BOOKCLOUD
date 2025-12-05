@@ -9,5 +9,6 @@ router.post("/solicitar", emprestimosController.solicitarEmprestimo);
 router.post("/devolver/:id", emprestimosController.devolverLivro);
 router.get("/exibir/:id", emprestimosController.exibirEmprestimo);
 router.get("/listar", emprestimosController.listarEmprestimos);
+router.get("/ativo", emprestimosController.listarAtivos);
 
 module.exports = router;

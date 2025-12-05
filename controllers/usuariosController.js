@@ -30,16 +30,16 @@ const loginUsuario = async (req, res) => {
       return res.status(401).json({ erro: "Senha inválida" });
     }
     res.json({
-      mensagem: "Login realizado com sucesso",
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        senha: usuario.senha,
-        tipo_usuario: usuario.tipo_usuario,
-        status: usuario.status,
-      },
-    });
+  mensagem: "Login realizado com sucesso",
+  usuario: {
+    id: usuario.id,
+    nome: usuario.nome,
+    email: usuario.email,
+    senha: usuario.senha,
+    tipo_usuario: usuario.tipo_usuario,
+    status: usuario.status,
+  },
+});
   } catch (error) {
     res.status(500).json({ erro: "Erro no login", detalhe: error.message });
   }
@@ -87,9 +87,53 @@ const selecionarTodosUsuarios = async (req, res) => {
   }
 };
 
+const atualizarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, email, senha, imagem } = req.body;
+
+    const usuarioExiste = await usuarioModel.buscarUsuarioPorId(id);
+    if (!usuarioExiste) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    let senhaHash = usuarioExiste.senha;
+    if (senha) {
+      senhaHash = await usuarioModel.gerarSenhaHash(senha);
+    }
+    let ImageUrl = usuarioExiste.foto;
+
+    if (imagem && imagem.startsWith("data:")) {
+      ImageUrl = await uploadBase64ToStorage(foto);
+    }
+
+    const dadosAtualizados = {
+      nome,
+      email,
+      senha: senhaHash,
+      imagem: ImageUrl,
+    };
+
+    const usuarioAtualizado = await usuarioModel.atualizarUsuario(
+      id,
+      dadosAtualizados
+    );
+
+    return res.status(200).json(usuarioAtualizado);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      mensagem: "Erro interno do servidor.",
+      detalhe: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   selecionarTodosUsuarios,
   criarUsuario,
   loginUsuario,
   getUsuarioPorId,
+  atualizarUsuario,
 };

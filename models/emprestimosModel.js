@@ -83,9 +83,32 @@ const ListarEmprestimo = async () => {
   };
 
 
+  const listarEmprestimosAtivos = async () => {
+    const query = `
+      SELECT 
+        e.id_usuario,
+        u.nome AS nome_usuario,
+        l.nome AS nome_livro,
+        e.data_devolucao
+      FROM emprestimo e
+      JOIN usuarios u ON e.id_usuario = u.id
+      JOIN livros l ON e.id_livro = l.id
+      WHERE l.status = 'ocupado'
+      ORDER BY e.id_usuario;
+    `;
+
+    const result = await conexao.query(query);
+    return result.rows;
+  }
+
+
+
+
+
 module.exports = {
   criarEmprestimo,
   devolverEmprestimo,
   dataDevolucao,
   ListarEmprestimo,
+  listarEmprestimosAtivos
 };
